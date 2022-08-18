@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/drawable/back_icon_white.xml" value="0.1885" />
+        <entry key="app/src/main/res/drawable/delete_icon.xml" value="0.1885" />
+        <entry key="app/src/main/res/drawable/delete_key_icon.xml" value="0.1885" />
+        <entry key="app/src/main/res/drawable/enter_button_bg.xml" value="0.1885" />
+        <entry key="app/src/main/res/drawable/hashtag_icon.xml" value="0.1885" />
+        <entry key="app/src/main/res/drawable/home_button_background.xml" value="0.1885" />
+        <entry key="app/src/main/res/drawable/keyboard_layout_icon.xml" value="0.1885" />
+        <entry key="app/src/main/res/drawable/settings_icon.xml" value="0.1885" />
+        <entry key="app/src/main/res/layout/activity_add_edit_hashtags.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/activity_add_group.xml" value="0.3880208333333333" />
+        <entry key="app/src/main/res/layout/activity_groups.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.3880208333333333" />
+        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.3880208333333333" />
+        <entry key="app/src/main/res/layout/add_group_dialog.xml" value="0.38697916666666665" />
+        <entry key="app/src/main/res/layout/hashtag_keyboard_layout.xml" value="0.31765711842667804" />
+        <entry key="app/src/main/res/layout/item_groups.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/item_hashtag_view.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/item_keyboard_button_view.xml" value="0.31765711842667804" />
+        <entry key="app/src/main/res/layout/itex_hashtag_view.xml" value="0.4519464720194647" />
+        <entry key="app/src/main/res/layout/keyboard_view.xml" value="0.3880208333333333" />
+        <entry key="app/src/main/res/layout/keyboard_view_layout.xml" value="0.31765711842667804" />
+        <entry key="app/src/main/res/xml/hashtag_keyboard.xml" value="0.3880208333333333" />
+        <entry key="app/src/main/res/xml/method.xml" value="0.3880208333333333" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

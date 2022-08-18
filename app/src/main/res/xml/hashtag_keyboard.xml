@@ -1,0 +1,51 @@
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:horizontalGap="5dp"
+    android:keyWidth="35%p"
+    android:keyHeight="60dp"
+    android:verticalGap="5dp">
+
+
+    <Row>
+        <Key
+            android:codes="49"
+            android:keyEdgeFlags="left"
+            android:keyLabel="TagBoard1" />
+        <Key
+            android:codes="50"
+            android:keyLabel="TagBoard2" />
+    </Row>
+
+    <Row>
+        <Key
+            android:codes="54"
+            android:keyEdgeFlags="left"
+            android:keyLabel="TagBoard3" />
+        <Key
+            android:codes="55"
+            android:keyLabel="TagBoard4" />
+    </Row>
+
+    <Row android:rowEdgeFlags="top">
+        <Key
+            android:codes="-5"
+            android:isRepeatable="true"
+            android:keyWidth="20%p"
+            android:keyEdgeFlags="right"
+            android:keyIcon="@drawable/delete_key_icon" />
+    </Row>
+
+    <Row android:rowEdgeFlags="bottom">
+        <!-- <Key
+             android:codes="-5"
+             android:isRepeatable="true"
+             android:keyWidth="50%p"
+             android:keyEdgeFlags="right"
+             android:keyIcon="@drawable/delete_key_icon" />-->
+        <Key
+            android:codes="-4"
+            android:keyWidth="50%p"
+            android:keyEdgeFlags="right"
+            android:keyLabel="DONE" />
+    </Row>
+
+</Keyboard>

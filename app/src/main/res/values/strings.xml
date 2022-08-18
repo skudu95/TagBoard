@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">TagBoard</string>
+    <string name="app_logo">App Logo</string>
+    <string name="welcome_to_tagboard">Welcome to TagBoard</string>
+    <string name="settings">Settings</string>
+    <string name="groups">Groups</string>
+    <string name="button_name">Button Name</string>
+    <string name="title_groups">Groups</string>
+    <string name="group_name">Group Name</string>
+    <string name="button_details">Button Details</string>
+    <string name="tag_name">Tag Name</string>
+    <string name="keyboard">keyboard</string>
+    <string name="backspace">backspace</string>
+    <string name="enter">enter</string>
+</resources>
