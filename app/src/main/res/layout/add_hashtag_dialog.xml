@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="10dp"
-        android:hint="@string/group_name"
+        android:hint="@string/hashtag"
         android:textColorHint="@color/logo_color_blue"
         app:boxStrokeColor="@color/white"
         app:hintTextColor="@color/logo_color_blue"
@@ -19,7 +19,7 @@
         app:startIconTint="@color/logo_color_blue">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/tv_group_name_dialog"
+            android:id="@+id/tv_hashtag_dialog"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="@font/montserrat_regular"

@@ -12,4 +12,7 @@
     <string name="keyboard">keyboard</string>
     <string name="backspace">backspace</string>
     <string name="enter">enter</string>
+    <string name="drag_icon">drag icon</string>
+    <string name="delete_button">delete button</string>
+    <string name="hashtag">Hashtag</string>
 </resources>

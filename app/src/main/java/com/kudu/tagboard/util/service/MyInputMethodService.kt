@@ -33,7 +33,7 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener {
         val keyboard = Keyboard(this, R.xml.test_keyboard)
         keyboardView.keyboard = keyboard
         keyboardView.setOnKeyboardActionListener(this)
-        
+
         //working with the buttons inside
         val ic = currentInputConnection
         val backspace = myView.findViewById<ImageButton>(R.id.btn_backspace)

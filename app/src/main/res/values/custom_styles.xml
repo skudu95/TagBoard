@@ -16,4 +16,8 @@
         <item name="cornerSize">3%</item>
     </style>
 
+    <style name="buttonGroupCurved">
+        <item name="cornerSize">15dp</item>
+    </style>
+
 </resources>

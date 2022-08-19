@@ -30,5 +30,5 @@ data class HashTags(
     var tag27: String? = null,
     var tag28: String? = null,
     var tag29: String? = null,
-    var tag30: String? = null,
+    var tag30: String? = null
 )

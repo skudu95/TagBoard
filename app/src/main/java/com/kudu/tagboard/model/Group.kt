@@ -1,10 +1,17 @@
 package com.kudu.tagboard.model
 
 data class Group(
-    var hashtags: ArrayList<HashTags>,
+//    var title: String,
+//    val id: String,
+    var hashtags: ArrayList<String>,
 
     )
 
 class GroupList {
-    var groupList: ArrayList<Group> = ArrayList()
+    lateinit var name: String
+    lateinit var groupList: ArrayList<Group>
+}
+
+class ButtonGroupList {
+    var ref: ArrayList<GroupList> = ArrayList()
 }
