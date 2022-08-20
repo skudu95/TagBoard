@@ -7,25 +7,26 @@ import android.inputmethodservice.KeyboardView
 import android.inputmethodservice.KeyboardView.OnKeyboardActionListener
 import android.text.TextUtils
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.kudu.tagboard.R
+import com.kudu.tagboard.adapter.KeyboardButtonListAdapter
 
 
 @Suppress("DEPRECATION")
 class MyInputMethodService : InputMethodService(), OnKeyboardActionListener {
     override fun onCreateInputView(): View {
-        // get the KeyboardView and add our Keyboard layout to it
+/*        // get the KeyboardView and add our Keyboard layout to it
 //        val keyboardView = layoutInflater.inflate(R.layout.keyboard_view, null) as KeyboardView
 
-        /* val KeyboardLayout: RelativeLayout? =
-             getLayoutInflater().inflate(R.layout.keyboard_layout, null) as RelativeLayout?*/
+        *//* val KeyboardLayout: RelativeLayout? =
+             getLayoutInflater().inflate(R.layout.keyboard_layout, null) as RelativeLayout?*//*
 
 //        val keyboardView: LinearLayout? = layoutInflater.inflate(R.layout.keyboard_view, null) as LinearLayout?
-        // 1  val keyboard = Keyboard(this, R.xml.hashtag_keyboard)
-
+        // 1  val keyboard = Keyboard(this, R.xml.hashtag_keyboard)*/
 
         val myView = View.inflate(this, R.layout.keyboard_view_layout, null) as RelativeLayout
         val keyboardView = layoutInflater.inflate(R.layout.keyboard_view, null) as KeyboardView
@@ -51,16 +52,29 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener {
             }
         }
 
-        val button1 = myView.findViewById<Button>(R.id.button1)
+        val buttonKeyboardRV = myView.findViewById<RecyclerView>(R.id.buttons_keyboard_rv)
+        buttonKeyboardRV.setItemViewCacheSize(8)
+        val templist = ArrayList<String>()
+        templist.add("Button 1")
+        templist.add("Button 2")
+        templist.add("Button 3")
+        templist.add("Button 4")
+        templist.add("Button 5")
+        templist.add("Button 6")
+        templist.add("Button 7")
+        templist.add("Button 8")
+        buttonKeyboardRV.layoutManager = LinearLayoutManager(this)
+        val adapter = KeyboardButtonListAdapter(this, templist)
+        buttonKeyboardRV.adapter = adapter
+
+        /*val button1 = myView.findViewById<Button>(R.id.button1)
         button1.setOnClickListener {
             Toast.makeText(this, "Button1 clicked", Toast.LENGTH_SHORT).show()
             ic.commitText("Hello", 1)
-        }
-
+        }*/
 
         myView.addView(keyboardView)
         return myView
-
 
         /*keyboardView.keyboard = keyboard
         keyboardView.setOnKeyboardActionListener(this)
@@ -88,33 +102,33 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener {
         }
     }
 
-    //work with buttons inside keyboard
-    private fun getButtonsWorking() {
-        val myView = View.inflate(this, R.layout.keyboard_view_layout, null) as RelativeLayout
-        val ic = currentInputConnection ?: return
+    /*   //work with buttons inside keyboard
+       private fun getButtonsWorking() {
+           val myView = View.inflate(this, R.layout.keyboard_view_layout, null) as RelativeLayout
+           val ic = currentInputConnection ?: return
 
-        //working with the buttons inside
-        val backspace = myView.findViewById<ImageButton>(R.id.btn_backspace)
+           //working with the buttons inside
+           val backspace = myView.findViewById<ImageButton>(R.id.btn_backspace)
 
-        backspace.setOnClickListener {
-            Toast.makeText(this, "Backspace clicked", Toast.LENGTH_SHORT).show()
-//            val ic = currentInputConnection
-            val selectedText = ic.getSelectedText(0)
-            if (TextUtils.isEmpty(selectedText)) {
-                // no selection, so delete previous character
-                ic.deleteSurroundingText(1, 0)
-            } else {
-                // delete the selection
-                ic.commitText("", 1)
-            }
-        }
+           backspace.setOnClickListener {
+               Toast.makeText(this, "Backspace clicked", Toast.LENGTH_SHORT).show()
+   //            val ic = currentInputConnection
+               val selectedText = ic.getSelectedText(0)
+               if (TextUtils.isEmpty(selectedText)) {
+                   // no selection, so delete previous character
+                   ic.deleteSurroundingText(1, 0)
+               } else {
+                   // delete the selection
+                   ic.commitText("", 1)
+               }
+           }
 
-        val button1 = myView.findViewById<Button>(R.id.button1)
-        button1.setOnClickListener {
-            Toast.makeText(this, "Button1 clicked", Toast.LENGTH_SHORT).show()
-            ic.commitText("Hello", 1)
-        }
-    }
+           val button1 = myView.findViewById<Button>(R.id.button1)
+           button1.setOnClickListener {
+               Toast.makeText(this, "Button1 clicked", Toast.LENGTH_SHORT).show()
+               ic.commitText("Hello", 1)
+           }
+       }*/
 
     @Deprecated("Deprecated in Java")
     override fun onPress(primaryCode: Int) {

@@ -7,6 +7,7 @@
     app:cardCornerRadius="7dp">
 
     <TextView
+        android:id="@+id/tv_button_name_KL"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fontFamily="@font/montserrat_regular"
