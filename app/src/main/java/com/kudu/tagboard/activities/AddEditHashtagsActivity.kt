@@ -3,23 +3,26 @@ package com.kudu.tagboard.activities
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.kudu.tagboard.R
 import com.kudu.tagboard.adapter.HashtagAdapter
 import com.kudu.tagboard.databinding.ActivityAddEditHashtagsBinding
 import com.kudu.tagboard.databinding.AddHashtagDialogBinding
+import com.kudu.tagboard.model.Group
 
 class AddEditHashtagsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddEditHashtagsBinding
     private lateinit var hashtagListAdapter: HashtagAdapter
-    var hashtagList: ArrayList<String> = ArrayList()
+
+    //    var hashtagList: ArrayList<String> = ArrayList()
+    var hashtagList: ArrayList<Group> = ArrayList()
     var hashtagPosition = 0
 
-    /*companion object {
-        var hashtagList: ArrayList<String> = ArrayList()
-    }*/
+    companion object {
+        //        var hashtagList: ArrayList<String> = ArrayList()
+        var currentGroupListPosition: Int = -1
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,9 +32,19 @@ class AddEditHashtagsActivity : AppCompatActivity() {
         setUpActionBar()
 
         //adapter
-        binding.tagsRv.setItemViewCacheSize(30)
-        binding.tagsRv.layoutManager = LinearLayoutManager(this)
-//        hashtagListAdapter = HashtagAdapter(this, hashtagList )
+//        binding.tagsRv.setItemViewCacheSize(30)
+//        binding.tagsRv.layoutManager = LinearLayoutManager(this)
+//        hashtagListAdapter = HashtagAdapter(this, GroupsActivity.groupList.ref[currentGroupListPosition].groupList, true)
+//        hashtagListAdapter = HashtagAdapter(this, )
+//        binding.tagsRv.adapter = hashtagListAdapter
+
+        currentGroupListPosition = intent.extras?.get("index") as Int
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        binding.tvTitle.text = GroupsActivity.groupList.ref[currentGroupListPosition].name
     }
 
     //action bar

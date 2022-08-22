@@ -10,7 +10,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kudu.tagboard.R
 import com.kudu.tagboard.adapter.KeyboardButtonListAdapter
@@ -63,7 +63,23 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener {
         templist.add("Button 6")
         templist.add("Button 7")
         templist.add("Button 8")
-        buttonKeyboardRV.layoutManager = LinearLayoutManager(this)
+        templist.add("Button 9")
+        templist.add("Button 10")
+        templist.add("Button 11")
+        templist.add("Button 12")
+        templist.add("Button 13")
+        templist.add("Button 14")
+        templist.add("Button 15")
+        templist.add("Button 16")
+        templist.add("Button 17")
+        templist.add("Button 18")
+        templist.add("Button 19")
+        templist.add("Button 20")
+        templist.add("Button 21")
+        templist.add("Button 22")
+        buttonKeyboardRV.layoutManager = GridLayoutManager(this, 2)
+//        var groupList: ButtonGroupList = ButtonGroupList()
+//        val adapter = GroupListAdapter(this, groupList = GroupsActivity.groupList.ref)
         val adapter = KeyboardButtonListAdapter(this, templist)
         buttonKeyboardRV.adapter = adapter
 

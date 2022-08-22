@@ -11,7 +11,8 @@ import com.kudu.tagboard.model.Group
 class HashtagAdapter(
     private val context: Context,
     var hashtagList: ArrayList<Group>, //change this to list of groups or hashtags
-//    var hashtagList: ArrayList<String>, //change this to list of groups or hashtags
+//    var hashtagList: ArrayList<String>,
+    private val groupListDetails: Boolean = false,
 ) : RecyclerView.Adapter<HashtagAdapter.MyViewHolder>() {
 
     class MyViewHolder(binding: ItemHashtagListLayoutBinding) :
@@ -31,8 +32,8 @@ class HashtagAdapter(
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val tagModel = hashtagList[position]
 
-//        holder.tagName.text = tagModel.hashtags.toString()
-        holder.tagName.text = tagModel.hashtags[position]
+//        holder.tagName.text = tagModel
+//        holder.tagName.text = tagModel.hashtags[position]
         holder.deleteTag.setOnClickListener {
             val builder = MaterialAlertDialogBuilder(context)
             builder.setMessage("Do you want to delete the tag?")
@@ -54,7 +55,7 @@ class HashtagAdapter(
         return hashtagList.size
     }
 
-    fun refreshTagList(){
+    fun refreshTagList() {
         hashtagList = ArrayList()
 //        hashtagList.addAll(AddEditHashtagsActivity.)
     }
