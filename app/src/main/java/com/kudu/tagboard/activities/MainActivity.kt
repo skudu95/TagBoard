@@ -24,7 +24,9 @@ class MainActivity : AppCompatActivity() {
         //btn settings
         binding.btnSettings.setOnClickListener {
             Toast.makeText(this, "Settings clicked", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, AddEditHashtagsActivity::class.java))
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
+
     }
+
 }

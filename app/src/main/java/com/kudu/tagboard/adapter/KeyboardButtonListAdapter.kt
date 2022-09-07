@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.kudu.tagboard.databinding.ItemKeyboardButtonView2Binding
+import com.kudu.tagboard.databinding.ItemKeyboardButtonViewBinding
 
 open class KeyboardButtonListAdapter(
     val context: Context,
@@ -13,13 +13,13 @@ open class KeyboardButtonListAdapter(
 ) : RecyclerView.Adapter<KeyboardButtonListAdapter.MyViewHolder>() {
 
 
-    class MyViewHolder(binding: ItemKeyboardButtonView2Binding) :
+    class MyViewHolder(binding: ItemKeyboardButtonViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val buttonName = binding.tvButtonNameKL
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        return MyViewHolder(ItemKeyboardButtonView2Binding.inflate(LayoutInflater.from(context),
+        return MyViewHolder(ItemKeyboardButtonViewBinding.inflate(LayoutInflater.from(context),
             parent,
             false))
     }

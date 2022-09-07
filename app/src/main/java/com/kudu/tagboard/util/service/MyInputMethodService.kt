@@ -6,18 +6,24 @@ import android.inputmethodservice.Keyboard
 import android.inputmethodservice.KeyboardView
 import android.inputmethodservice.KeyboardView.OnKeyboardActionListener
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.firestore.FirebaseFirestore
 import com.kudu.tagboard.R
-import com.kudu.tagboard.adapter.KeyboardButtonListAdapter
+import com.kudu.tagboard.adapter.KeyboardViewAdapter
+import com.kudu.tagboard.model.ButtonGroup
 
 
 @Suppress("DEPRECATION")
 class MyInputMethodService : InputMethodService(), OnKeyboardActionListener {
+
+    val buttonList: ArrayList<ButtonGroup> = ArrayList()
+
     override fun onCreateInputView(): View {
 /*        // get the KeyboardView and add our Keyboard layout to it
 //        val keyboardView = layoutInflater.inflate(R.layout.keyboard_view, null) as KeyboardView
@@ -52,7 +58,37 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener {
             }
         }
 
+        //get the list from firestore
+        val mFirestoreDb = FirebaseFirestore.getInstance()
+
+        mFirestoreDb.collection("buttons")
+            .get()
+            .addOnSuccessListener { document ->
+                Log.e("ButtonList Keyboard", document.documents.toString())
+                for (i in document.documents) {
+                    val buttonGroup = i.toObject(ButtonGroup::class.java)
+                    buttonGroup!!.id = i.id
+                    buttonList.add(buttonGroup)
+                }
+                val buttonKeyboardRV = myView.findViewById<RecyclerView>(R.id.buttons_keyboard_rv)
+                buttonKeyboardRV.setItemViewCacheSize(8)
+                buttonKeyboardRV.layoutManager = GridLayoutManager(this, 2)
+                val buttonAdapter = KeyboardViewAdapter(this, buttonList)
+                buttonKeyboardRV.adapter = buttonAdapter
+                buttonAdapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener {
+                Log.e("ButtonListErrorKeyboard", "Error querying button list")
+            }
+
+        // adapter initialise
         val buttonKeyboardRV = myView.findViewById<RecyclerView>(R.id.buttons_keyboard_rv)
+        buttonKeyboardRV.setItemViewCacheSize(8)
+        buttonKeyboardRV.layoutManager = GridLayoutManager(this, 2)
+        val buttonAdapter = KeyboardViewAdapter(this, buttonList)
+        buttonKeyboardRV.adapter = buttonAdapter
+        buttonAdapter.notifyDataSetChanged()
+        /*val buttonKeyboardRV = myView.findViewById<RecyclerView>(R.id.buttons_keyboard_rv)
         buttonKeyboardRV.setItemViewCacheSize(8)
         val templist = ArrayList<String>()
         templist.add("Button 1")
@@ -77,11 +113,16 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener {
         templist.add("Button 20")
         templist.add("Button 21")
         templist.add("Button 22")
+
+
+
         buttonKeyboardRV.layoutManager = GridLayoutManager(this, 2)
 //        var groupList: ButtonGroupList = ButtonGroupList()
 //        val adapter = GroupListAdapter(this, groupList = GroupsActivity.groupList.ref)
-        val adapter = KeyboardButtonListAdapter(this, templist)
-        buttonKeyboardRV.adapter = adapter
+//        val adapter = KeyboardButtonListAdapter(this, templist)
+        val buttonAdapter = KeyboardViewAdapter(this, buttonList)
+//        buttonKeyboardRV.adapter = adapter
+        buttonKeyboardRV.adapter = buttonAdapter*/
 
         /*val button1 = myView.findViewById<Button>(R.id.button1)
         button1.setOnClickListener {
@@ -145,6 +186,37 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener {
                ic.commitText("Hello", 1)
            }
        }*/
+
+    //get list of buttons from firestore
+    private fun getButtonList() {
+        val mFirestoreDb = FirebaseFirestore.getInstance()
+
+        mFirestoreDb.collection("buttons")
+            .get()
+            .addOnSuccessListener { document ->
+                Log.e("ButtonList Keyboard", document.documents.toString())
+                for (i in document.documents) {
+                    val buttonGroup = i.toObject(ButtonGroup::class.java)
+                    buttonGroup!!.id = i.id
+                    buttonList.add(buttonGroup)
+                }
+                initialiseAdapter()
+            }
+            .addOnFailureListener {
+                Log.e("ButtonListErrorKeyboard", "Error querying button list")
+            }
+    }
+
+    //initialise adapter
+    private fun initialiseAdapter() {
+        val myView = View.inflate(this, R.layout.keyboard_view_layout, null) as RelativeLayout
+        val buttonKeyboardRV = myView.findViewById<RecyclerView>(R.id.buttons_keyboard_rv)
+        buttonKeyboardRV.setItemViewCacheSize(8)
+        buttonKeyboardRV.layoutManager = GridLayoutManager(this, 2)
+        val buttonAdapter = KeyboardViewAdapter(this, buttonList)
+        buttonKeyboardRV.adapter = buttonAdapter
+        buttonAdapter.notifyDataSetChanged()
+    }
 
     @Deprecated("Deprecated in Java")
     override fun onPress(primaryCode: Int) {

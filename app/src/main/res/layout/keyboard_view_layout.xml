@@ -4,13 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="300dp"
+    android:layout_alignParentBottom="true"
     android:background="@color/black">
 
     <LinearLayout
         android:id="@+id/linear_settings_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal">
+
+        <SeekBar
+            android:id="@+id/tag_seekbar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="0dp"
+            android:layout_weight="5"
+            android:background="@color/transparent"
+            android:backgroundTint="@color/white"
+            android:progressBackgroundTint="@color/white"
+            android:progressTint="@color/logo_color_blue"
+            android:thumbTint="@color/white" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/montserrat_regular"
+            android:text="0 Tags"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
 
         <ImageButton
             android:layout_width="0dp"
@@ -116,7 +140,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="120dp"
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:orientation="vertical"

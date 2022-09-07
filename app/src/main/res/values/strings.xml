@@ -14,5 +14,6 @@
     <string name="enter">enter</string>
     <string name="drag_icon">drag icon</string>
     <string name="delete_button">delete button</string>
-    <string name="hashtag">Hashtag</string>
+    <string name="hashtag">Hashtag Name</string>
+    <string name="input_tag_name">Input Tag</string>
 </resources>

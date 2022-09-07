@@ -3,8 +3,8 @@ package com.kudu.tagboard.model
 data class Group(
 //    var title: String,
 //    val id: String,
-//    var hashtags: ArrayList<String> = ArrayList()
-    var tag1: String? = null,
+    var hashtags: ArrayList<String> = ArrayList()
+   /* var tag1: String? = null,
     var tag2: String? = null,
     var tag3: String? = null,
     var tag4: String? = null,
@@ -33,7 +33,7 @@ data class Group(
     var tag27: String? = null,
     var tag28: String? = null,
     var tag29: String? = null,
-    var tag30: String? = null,
+    var tag30: String? = null,*/
 )
 
 class GroupList {
