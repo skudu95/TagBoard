@@ -25,6 +25,7 @@ class HashTagActivity : AppCompatActivity() {
     private var mButtonName: String = ""
     private var mButtonId: String = ""
     private val mFirestoreDb = FirebaseFirestore.getInstance()
+    private val tagListNames: ArrayList<String> = ArrayList()
 
 //    val buttonGroup: ButtonGroup? = intent.getSerializableExtra("index") as ButtonGroup?
 
@@ -45,10 +46,12 @@ class HashTagActivity : AppCompatActivity() {
 
         setUpActionBar()
         getAllTags()
+        getTagNameList()
 
         binding.btnAddTag.setOnClickListener {
             addTags()
         }
+
     }
 
     //delete hashtag
@@ -57,7 +60,7 @@ class HashTagActivity : AppCompatActivity() {
             .document(tagId)
             .delete()
             .addOnSuccessListener {
-                Toast.makeText(this, "Tag deleted successfully", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this, "Tag deleted successfully", Toast.LENGTH_SHORT).show()
 //                tagList.clear()
                 getAllTags()
             }
@@ -100,6 +103,34 @@ class HashTagActivity : AppCompatActivity() {
         customDialog.show()
     }
 
+    //TODO: get tag names only
+    private fun getTagNameList() {
+        mFirestoreDb.collection("hashtags")
+            .whereEqualTo("buttonId", mButtonId)
+            .get()
+            .addOnSuccessListener { document ->
+                var data = ""
+                for (i in document) {
+                    val tag = i.toObject(HashTags::class.java)
+                    val tagName = arrayOf(tag.tagName)
+
+                    for (tag in tagName) {
+//                        data += tagName.joinToString(" ")
+                        data += " $tag"
+                    }
+
+
+                    /* for(tag in tagName!!){
+ //                        data += "\n$tag"
+                         data += "$tag"
+                     }*/
+//                    data += "\n\n"
+                }
+                binding.textViewData.text = data
+            }
+    }
+
+
     //get all hashtags
     private fun getAllTags() {
         mFirestoreDb.collection("hashtags")
@@ -113,6 +144,10 @@ class HashTagActivity : AppCompatActivity() {
                 }
                 initialiseAdapter()
                 Toast.makeText(this, "Tags Retrieved", Toast.LENGTH_LONG).show()
+
+                /*val joinedData = tagList.joinToString (" ")
+                binding.textViewData.text = joinedData*/
+
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Error retrieving tags", Toast.LENGTH_SHORT).show()
@@ -123,8 +158,7 @@ class HashTagActivity : AppCompatActivity() {
     //add hash tags
     private fun addTags() {
         val tagName = binding.etInputTag.text.toString()
-        val tag: HashTags = HashTags(mButtonId, tagName)
-
+        val tag = HashTags(mButtonId, tagName)
         val dbRef = mFirestoreDb.collection("hashtags")
 
         dbRef
@@ -144,12 +178,12 @@ class HashTagActivity : AppCompatActivity() {
 
     //initialising adapter
     private fun initialiseAdapter() {
+        binding.tagsRv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
         binding.tagsRv.setItemViewCacheSize(20)
         binding.tagsRv.setHasFixedSize(true)
-        binding.tagsRv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
         tagListAdapter = HashTagListViewAdapter(this, tagList)
         binding.tagsRv.adapter = tagListAdapter
-        tagListAdapter.notifyDataSetChanged()
+//        tagListAdapter.notifyDataSetChanged()
 
     }
 
@@ -165,4 +199,5 @@ class HashTagActivity : AppCompatActivity() {
         binding.tvTitle.text = mButtonName
         binding.toolbarHashtagsActivity.setNavigationOnClickListener { onBackPressed() }
     }
+
 }

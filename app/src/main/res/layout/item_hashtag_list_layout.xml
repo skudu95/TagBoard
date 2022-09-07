@@ -20,8 +20,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_weight="1"
-            android:contentDescription="@string/drag_icon"
-            android:padding="12dp"
+            android:contentDescription="@string/hashtag_icon"
+            android:padding="8dp"
             android:src="@drawable/hashtag_icon"
             app:tint="@color/logo_color_blue" />
 
@@ -34,7 +34,7 @@
             android:maxLines="1"
             android:text="@string/hashtag"
             android:textColor="@color/logo_color_blue"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <ImageButton
@@ -42,6 +42,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
+            android:padding="8dp"
             android:layout_weight="1"
             android:backgroundTint="@color/transparent"
             android:contentDescription="@string/delete_button"

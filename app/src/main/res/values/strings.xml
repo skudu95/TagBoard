@@ -16,4 +16,5 @@
     <string name="delete_button">delete button</string>
     <string name="hashtag">Hashtag Name</string>
     <string name="input_tag_name">Input Tag</string>
+    <string name="hashtag_icon">hashtag icon</string>
 </resources>
