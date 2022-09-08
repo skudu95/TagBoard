@@ -34,6 +34,7 @@ class HashTagActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHashTagBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
 
 //        currentGroupListPosition = intent.extras?.get("index") as Int
