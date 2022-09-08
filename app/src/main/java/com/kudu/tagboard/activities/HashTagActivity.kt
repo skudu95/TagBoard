@@ -23,7 +23,9 @@ class HashTagActivity : AppCompatActivity() {
 //    private var currentGroupListPosition: Int = -1
 
     private var mButtonName: String = ""
-    private var mButtonId: String = ""
+    var mButtonId: String = ""
+
+    //    private var mButtonId: String = ""
     private val mFirestoreDb = FirebaseFirestore.getInstance()
     private val tagListNames: ArrayList<String> = ArrayList()
 
@@ -103,7 +105,6 @@ class HashTagActivity : AppCompatActivity() {
         customDialog.show()
     }
 
-    //TODO: get tag names only
     private fun getTagNameList() {
         mFirestoreDb.collection("hashtags")
             .whereEqualTo("buttonId", mButtonId)
