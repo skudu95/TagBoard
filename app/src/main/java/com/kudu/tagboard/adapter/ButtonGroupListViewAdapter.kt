@@ -46,15 +46,9 @@ class ButtonGroupListViewAdapter(
             }
         }
         holder.itemView.setOnClickListener {
-//            val intent = Intent(context, AddEditHashtagsActivity::class.java)
             val intent = Intent(context, HashTagActivity::class.java)
             intent.putExtra("buttonId", model.id)
             intent.putExtra("buttonName", model.buttonName)
-
-            /* val dbRef = FirebaseFirestore.getInstance().collection("buttons")
-             val docID = dbRef.document().id
-             intent.putExtra("", buttonName)*/
-//            ContextCompat.startActivity(context, intent, null)
             context.startActivity(intent)
         }
     }

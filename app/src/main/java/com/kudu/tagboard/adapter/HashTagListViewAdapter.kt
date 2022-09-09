@@ -33,6 +33,7 @@ class HashTagListViewAdapter(
                 val builder = MaterialAlertDialogBuilder(context)
                 builder.setMessage("Do you want to delete the tag?")
                     .setPositiveButton("Yes") { dialog, _ ->
+//                        HashTagActivity().deleteTag(model.buttonId!!)
                         HashTagActivity().deleteTag(model.buttonId!!)
                         dialog.dismiss()
                     }
@@ -41,7 +42,6 @@ class HashTagListViewAdapter(
                     }
                 val customDialog = builder.create()
                 customDialog.show()
-//                HashTagActivity().showAlertDialogToDeleteTag(model.buttonId!!)
             }
         }
 

@@ -26,7 +26,7 @@
                 android:layout_weight="7"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
-                android:text="@string/title_groups"
+                android:text="@string/title_buttons"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />

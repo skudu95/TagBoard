@@ -5,9 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.kudu.tagboard.R
 import com.kudu.tagboard.adapter.ButtonGroupListViewAdapter
 import com.kudu.tagboard.databinding.ActivityGroupsBinding
@@ -28,106 +30,122 @@ class GroupsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setUpActionBar()
-        /*getButtonListFromFirestore()
-        initialiseAdapter()*/
+        initialiseAdapter()
+        getButtonListFromFirestore()
 
         //add button
         binding.btnAddGroup.setOnClickListener {
             Toast.makeText(this, "Add Group clicked", Toast.LENGTH_SHORT).show()
             customAlertDialog()
         }
-        getButtonListFromFirestore()
-        initialiseAdapter()
     }
 
     //create a new button
     private fun addButtonListToFirestore(buttonName: String) {
         val dbRef = mFirestoreDb.collection("buttons")
         val buttonId = dbRef.document().id
-//        val buttonGroup = ButtonGroup(dbRef.id,buttonName)
-//        val buttonGroup = ButtonGroup("", buttonName)
         val buttonGroup = ButtonGroup(buttonId, buttonName)
-        dbRef.add(buttonGroup)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Button added successfully", Toast.LENGTH_SHORT).show()
-                Log.i("Added Button", "$buttonGroup added")
 
-                /*   buttonList.clear()
-                   getButtonListFromFirestore() //TODO: delete if not used*/
+//        dbRef.add(buttonGroup)
+        dbRef
+            .document()
+            .set(buttonGroup, SetOptions.merge()) //changed to check if it works
+            .addOnSuccessListener {
+                lifecycleScope.launchWhenCreated {
+                    Toast.makeText(this@GroupsActivity,
+                        "Button added successfully",
+                        Toast.LENGTH_SHORT).show()
+                    Log.i("Added Button", "$buttonGroup added")
+
+                    getButtonListFromFirestore()
+                    buttonListAdapter.notifyDataSetChanged()
+                }
             }
             .addOnFailureListener {
-                Toast.makeText(this,
-                    "Something went wrong. Please try again...",
-                    Toast.LENGTH_SHORT).show()
+                lifecycleScope.launchWhenResumed {
+                    Toast.makeText(this@GroupsActivity,
+                        "Something went wrong. Please try again...",
+                        Toast.LENGTH_SHORT).show()
+                }
             }
-        getButtonListFromFirestore()
     }
 
     //get list of buttons
-//    private fun getButtonListFromFirestore() {
     private fun getButtonListFromFirestore() {
         mFirestoreDb.collection("buttons")
             .get()
-            .addOnSuccessListener { document ->
-                Log.e("Button List", document.documents.toString())
-                for (i in document.documents) {
-                    val buttonGroup = i.toObject(ButtonGroup::class.java)
-                    buttonGroup!!.id = i.id
-//                    buttonList.clear()
-                    buttonList.add(buttonGroup)
+            /* .addOnSuccessListener { document ->
+                 lifecycleScope.launchWhenCreated {
+                     Log.e("Button List", document.documents.toString())
+                     for (i in document.documents) {
+                         val buttonGroup = i.toObject(ButtonGroup::class.java)
+                         buttonGroup!!.id = i.id
+                         buttonList.add(buttonGroup)
+                     }
+                     initialiseAdapter()
+                 }
+             }*/
+            .addOnCompleteListener { task ->
+                lifecycleScope.launchWhenCreated {
+                    /*if (buttonList != null) {
+                        buttonList.clear()
+                    }*/
+
+                    if (task.isSuccessful) {
+                        if (buttonList != null) {
+                            buttonList.clear()
+                        }
+
+                        for (document in task.result) {
+                            val buttonGroup = document.toObject(ButtonGroup::class.java)
+                            buttonGroup.id = document.id
+                            buttonList.add(buttonGroup)
+                        }
+                        initialiseAdapter()
+                    }
                 }
-                initialiseAdapter()
             }
             .addOnFailureListener {
-                Toast.makeText(this, "Error querying button list", Toast.LENGTH_SHORT).show()
-                Log.e("ButtonListError", "Error querying button list")
+                lifecycleScope.launchWhenResumed {
+                    Toast.makeText(this@GroupsActivity,
+                        "Error querying button list",
+                        Toast.LENGTH_SHORT).show()
+                    Log.e("ButtonListError", "Error querying button list")
+                }
             }
     }
-    /*   private fun getButtonListFromFirestore() {
-           val buttonRef = mFirestoreDb.collection("buttons").limit(20)
 
-           buttonRef.addSnapshotListener { snapshot, exception ->
-               if (exception != null || snapshot == null) {
-                   Log.e(TAG, "Exception when querying buttons", exception)
-                   return@addSnapshotListener
-               }
-
-               val buttonGroup = snapshot.toObjects(ButtonGroup::class.java)
-               buttonList.clear()
-               buttonList.addAll(buttonGroup)
-               for (button in buttonGroup) {
-                   Log.d(TAG, "Button: $button")
-               }
-           }
-       }*/
-
+    //delete button
     fun deleteButtonFromFirestoreList(buttonId: String) {
         mFirestoreDb.collection("buttons")
             .document(buttonId)
             .delete()
             .addOnSuccessListener {
-                Toast.makeText(this, "Button deleted successfully", Toast.LENGTH_SHORT).show()
-                buttonList.clear()
-//                getButtonListFromFirestore()
-                initialiseAdapter()
+                lifecycleScope.launchWhenResumed {
+                    Toast.makeText(this@GroupsActivity,
+                        "Button deleted successfully",
+                        Toast.LENGTH_SHORT).show()
+                    getButtonListFromFirestore()
+                }
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this,
-                    "Could not delete the button. Please try again...",
-                    Toast.LENGTH_SHORT).show()
-                Log.e("Button Delete Error", "Error while deleting the button", e)
+                lifecycleScope.launchWhenResumed {
+                    Toast.makeText(this@GroupsActivity,
+                        "Could not delete the button. Please try again...",
+                        Toast.LENGTH_SHORT).show()
+                    Log.e("Button Delete Error", "Error while deleting the button", e)
+                }
             }
     }
 
     //initialize adapter
     private fun initialiseAdapter() {
+        binding.buttonsRv.layoutManager = LinearLayoutManager(this)
         binding.buttonsRv.setItemViewCacheSize(20)
         binding.buttonsRv.setHasFixedSize(true)
-        binding.buttonsRv.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
         buttonListAdapter = ButtonGroupListViewAdapter(this, buttonList)
         binding.buttonsRv.adapter = buttonListAdapter
-        buttonListAdapter.notifyDataSetChanged()
+//        buttonListAdapter.notifyDataSetChanged()
     }
 
     //alert dialog
@@ -146,7 +164,6 @@ class GroupsActivity : AppCompatActivity() {
                     }
                 }
                 dialog.dismiss()
-                buttonListAdapter.notifyDataSetChanged()
             }
             .setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
@@ -165,10 +182,4 @@ class GroupsActivity : AppCompatActivity() {
         binding.toolbarGroupsActivity.setNavigationOnClickListener { onBackPressed() }
     }
 
-    override fun onResume() {
-        super.onResume()
-//        getButtonListFromFirestore()
-//        buttonListAdapter.notifyDataSetChanged()
-        initialiseAdapter()
-    }
 }

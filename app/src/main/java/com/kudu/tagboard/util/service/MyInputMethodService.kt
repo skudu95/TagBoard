@@ -26,7 +26,7 @@ import com.kudu.tagboard.model.HashTags
 class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
     KeyboardViewAdapter.OnItemClickListener {
 
-    val buttonList: ArrayList<ButtonGroup> = ArrayList()
+    private val buttonList: ArrayList<ButtonGroup> = ArrayList()
 //    private var myButtonId: String = HashTagActivity().mButtonId
 
 //    val ic = currentInputConnection
