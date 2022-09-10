@@ -116,7 +116,7 @@ class GroupsActivity : AppCompatActivity() {
     }
 
     //delete button
-    fun deleteButtonFromFirestoreList(buttonId: String) {
+    fun deleteButtonFromFirestoreList(buttonId: String, position: Int) {
         mFirestoreDb.collection("buttons")
             .document(buttonId)
             .delete()
@@ -129,12 +129,11 @@ class GroupsActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener { e ->
-                lifecycleScope.launchWhenResumed {
-                    Toast.makeText(this@GroupsActivity,
-                        "Could not delete the button. Please try again...",
-                        Toast.LENGTH_SHORT).show()
-                    Log.e("Button Delete Error", "Error while deleting the button", e)
-                }
+                Toast.makeText(this@GroupsActivity,
+                    "Could not delete the button. Please try again...",
+                    Toast.LENGTH_SHORT).show()
+                Log.e("Button Delete Error", "Error while deleting the button", e)
+
             }
     }
 

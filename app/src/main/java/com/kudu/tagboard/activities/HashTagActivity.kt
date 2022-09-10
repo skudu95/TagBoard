@@ -3,11 +3,9 @@ package com.kudu.tagboard.activities
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.kudu.tagboard.R
@@ -22,16 +20,11 @@ class HashTagActivity : AppCompatActivity() {
 
     private var tagList: ArrayList<HashTags> = ArrayList()
     private lateinit var tagListAdapter: HashTagListViewAdapter
-//    private var currentGroupListPosition: Int = -1
 
     private var mButtonName: String = ""
     private var mButtonId: String = ""
 
-    //    private var mButtonId: String = ""
     private val mFirestoreDb = FirebaseFirestore.getInstance()
-    private val tagListNames: ArrayList<String> = ArrayList()
-
-//    val buttonGroup: ButtonGroup? = intent.getSerializableExtra("index") as ButtonGroup?
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +32,6 @@ class HashTagActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-//        currentGroupListPosition = intent.extras?.get("index") as Int
-//        val buttonGroup: ButtonGroup? = intent.getSerializableExtra("index") as ButtonGroup?
 
         if (intent.hasExtra("buttonName")) {
             mButtonName = intent.getStringExtra("buttonName")!!
@@ -50,8 +41,6 @@ class HashTagActivity : AppCompatActivity() {
         }
 
         setUpActionBar()
-//        getAllTags()
-//        getTagNameList()
         initialiseAdapter()
 
         binding.btnAddTag.setOnClickListener {
@@ -61,7 +50,7 @@ class HashTagActivity : AppCompatActivity() {
     }
 
     //delete hashtag
-    fun deleteTag(tagId: String) {
+    fun deleteTag(tagId: String, position: Int) {
         mFirestoreDb.collection("hashtags")
             .document(tagId)
             .delete()
@@ -71,10 +60,7 @@ class HashTagActivity : AppCompatActivity() {
                         "Tag deleted successfully",
                         Toast.LENGTH_SHORT).show()
                     Log.d("TagDeleted", "Tag successfully deleted!")
-//                    tagList.clear()
                     getAllTags()
-//                    initialiseAdapter()
-                    tagListAdapter.notifyDataSetChanged()
                 }
             }
             .addOnFailureListener { e ->
@@ -86,58 +72,6 @@ class HashTagActivity : AppCompatActivity() {
                 }
             }
     }
-
-    //custom alert for delete tag
-    fun showAlertDialogToDeleteTags(tagId: String) {
-        val builder = MaterialAlertDialogBuilder(this)
-        builder.setMessage("Do you want to delete the tag?")
-            .setPositiveButton("Yes") { dialog, _ ->
-                deleteTag(tagId)
-                dialog.dismiss()
-            }
-            .setNegativeButton("No") { dialog, _ ->
-                dialog.dismiss()
-            }
-        val customDialog = builder.create()
-        customDialog.setCancelable(false)
-        customDialog.show()
-    }
-
-    fun showAlertDialogToDeleteTag(tagId: String) {
-        val builder = AlertDialog.Builder(this)
-        builder.setMessage("Do you want to delete the tag?")
-            .setPositiveButton("Yes") { dialog, _ ->
-                deleteTag(tagId)
-                dialog.dismiss()
-            }
-            .setNegativeButton("No") { dialog, _ ->
-                dialog.dismiss()
-            }
-        val customDialog: AlertDialog = builder.create()
-        customDialog.setCancelable(false)
-        customDialog.show()
-    }
-
-    //get data and show in tv
-    private fun getTagNameList() {
-        mFirestoreDb.collection("hashtags")
-            .whereEqualTo("buttonId", mButtonId)
-            .get()
-            .addOnSuccessListener { document ->
-                var data = ""
-                for (i in document) {
-                    val tag = i.toObject(HashTags::class.java)
-                    val tagName = arrayOf(tag.tagName)
-
-                    tagName.forEach { tag ->
-                        //                        data += tagName.joinToString(" ")
-                        data += " $tag"
-                    }
-                }
-                binding.textViewData.text = data
-            }
-    }
-
 
     //get all hashtags
     private fun getAllTags() {
@@ -159,8 +93,8 @@ class HashTagActivity : AppCompatActivity() {
                 lifecycleScope.launchWhenCreated {
                     if (task.isSuccessful) {
                         var count = 0
-//                        val tagItem = mutableListOf()
-                        for (document in task.result) {
+
+                        task.result.forEach { document ->
                             val tag = document.toObject(HashTags::class.java)
                             tag.buttonId = document.id
                             tagList.add(tag)
@@ -170,7 +104,7 @@ class HashTagActivity : AppCompatActivity() {
                         initialiseAdapter()
                         Toast.makeText(this@HashTagActivity, "Tags Retrieved", Toast.LENGTH_LONG)
                             .show()
-                        binding.textViewData.text = count.toString()
+//                        binding.textViewData.text = count.toString()
                     } else {
                         Log.d("ErrorGetTags", "Error getting all the tags: ", task.exception)
                     }

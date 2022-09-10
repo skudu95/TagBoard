@@ -35,7 +35,10 @@ class ButtonGroupListViewAdapter(
                 val builder = MaterialAlertDialogBuilder(context)
                 builder.setMessage("Do you want to delete the button?")
                     .setPositiveButton("Yes") { dialog, _ ->
-                        GroupsActivity().deleteButtonFromFirestoreList(model.id!!)
+                        GroupsActivity().deleteButtonFromFirestoreList(model.id!!, position)
+                        groupList.removeAt(position)
+                        notifyItemRemoved(position)
+                        notifyItemRangeChanged(position, groupList.size)
                         dialog.dismiss()
                     }
                     .setNegativeButton("No") { dialog, _ ->

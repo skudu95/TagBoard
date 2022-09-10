@@ -34,7 +34,10 @@ class HashTagListViewAdapter(
                 builder.setMessage("Do you want to delete the tag?")
                     .setPositiveButton("Yes") { dialog, _ ->
 //                        HashTagActivity().deleteTag(model.buttonId!!)
-                        HashTagActivity().deleteTag(model.buttonId!!)
+                        HashTagActivity().deleteTag(model.buttonId!!, position)
+                        hashTagList.removeAt(position)
+                        notifyItemRemoved(position)
+                        notifyItemRangeChanged(position, hashTagList.size)
                         dialog.dismiss()
                     }
                     .setNegativeButton("No") { dialog, _ ->

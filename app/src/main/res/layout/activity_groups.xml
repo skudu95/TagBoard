@@ -41,7 +41,8 @@
                 android:paddingStart="0dp"
                 android:paddingEnd="15dp"
                 android:src="@drawable/add_icon"
-                app:tint="@color/white" />
+                app:tint="@color/white"
+                android:contentDescription="Add Group" />
         </LinearLayout>
 
     </com.google.android.material.appbar.MaterialToolbar>
