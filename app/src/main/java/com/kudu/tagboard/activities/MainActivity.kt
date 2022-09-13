@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
         binding.btnGroup.setOnClickListener {
             Toast.makeText(this, "Groups clicked", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, GroupsActivity::class.java))
+            finish()
         }
 
         //btn settings

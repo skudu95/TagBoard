@@ -25,9 +25,12 @@
             android:backgroundTint="@color/white"
             android:progressBackgroundTint="@color/white"
             android:progressTint="@color/logo_color_blue"
+            android:min="0"
+            android:max="30"
             android:thumbTint="@color/white" />
 
         <TextView
+            android:id="@+id/tag_seekbar_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

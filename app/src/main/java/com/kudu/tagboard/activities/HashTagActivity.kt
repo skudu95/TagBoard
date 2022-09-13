@@ -104,7 +104,7 @@ class HashTagActivity : AppCompatActivity() {
                         initialiseAdapter()
                         Toast.makeText(this@HashTagActivity, "Tags Retrieved", Toast.LENGTH_LONG)
                             .show()
-//                        binding.textViewData.text = count.toString()
+                        binding.textViewData.text = count.toString()
                     } else {
                         Log.d("ErrorGetTags", "Error getting all the tags: ", task.exception)
                     }
@@ -136,6 +136,7 @@ class HashTagActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT).show()
                     Log.i("Added Tag", "$tag added")
 
+                    binding.etInputTag.text!!.clear()
                     tagList.clear()
                     getAllTags()
                 }

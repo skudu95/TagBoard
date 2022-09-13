@@ -9,5 +9,6 @@ data class ButtonGroup(
     @Exclude @set:Exclude @get:Exclude var id: String? = null,
     var buttonName: String? = null,
 //    var tags: List<String>? = null,
+    var tagItemsNumber: Int = 0,
     var tagsList: ArrayList<HashTags> = ArrayList(),
-): Parcelable
+) : Parcelable

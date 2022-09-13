@@ -12,6 +12,8 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import android.widget.RelativeLayout
+import android.widget.SeekBar
+import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
@@ -44,6 +46,8 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
         val backspace = myView.findViewById<ImageButton>(R.id.btn_backspace)
         val btnSettings = myView.findViewById<ImageButton>(R.id.settings_to_app)
         val btnKeyboardPicker = myView.findViewById<ImageButton>(R.id.keyboard_picker)
+        val seekBar = myView.findViewById<SeekBar>(R.id.tag_seekbar)
+        val seekBarText = myView.findViewById<TextView>(R.id.tag_seekbar_text)
 
         //keyboard picker button
         btnKeyboardPicker.setOnClickListener {
@@ -53,6 +57,18 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
                 imeManager.showInputMethodPicker()
             }
         }
+
+        //seekbar
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekbar: SeekBar?, progress: Int, fromUser: Boolean) {
+                val strProgress = progress.toString()
+                seekBarText.text = "$strProgress Tags"
+            }
+
+            override fun onStartTrackingTouch(seekbar: SeekBar?) = Unit
+            override fun onStopTrackingTouch(seekbar: SeekBar?) = Unit
+
+        })
 
         //settings button to redirect to app UI
         btnSettings.setOnClickListener {
