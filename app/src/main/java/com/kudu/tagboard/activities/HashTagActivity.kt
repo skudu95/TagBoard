@@ -7,10 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.kudu.tagboard.R
 import com.kudu.tagboard.adapter.HashTagListViewAdapter
 import com.kudu.tagboard.databinding.ActivityHashTagBinding
+import com.kudu.tagboard.model.ButtonGroup
 import com.kudu.tagboard.model.HashTags
 
 
@@ -23,6 +25,7 @@ class HashTagActivity : AppCompatActivity() {
 
     private var mButtonName: String = ""
     private var mButtonId: String = ""
+//    var count = 0
 
     private val mFirestoreDb = FirebaseFirestore.getInstance()
 
@@ -77,6 +80,7 @@ class HashTagActivity : AppCompatActivity() {
     private fun getAllTags() {
         mFirestoreDb.collection("hashtags")
             .whereEqualTo("buttonId", mButtonId)
+            .orderBy("creationTimeTag", Query.Direction.DESCENDING)
             .get()
             /*  .addOnSuccessListener { document ->
                   lifecycleScope.launchWhenCreated {
@@ -93,18 +97,17 @@ class HashTagActivity : AppCompatActivity() {
                 lifecycleScope.launchWhenCreated {
                     if (task.isSuccessful) {
                         var count = 0
-
                         task.result.forEach { document ->
                             val tag = document.toObject(HashTags::class.java)
                             tag.buttonId = document.id
                             tagList.add(tag)
-
                             count++
                         }
                         initialiseAdapter()
                         Toast.makeText(this@HashTagActivity, "Tags Retrieved", Toast.LENGTH_LONG)
                             .show()
                         binding.textViewData.text = count.toString()
+                        updateButton(count)
                     } else {
                         Log.d("ErrorGetTags", "Error getting all the tags: ", task.exception)
                     }
@@ -123,7 +126,9 @@ class HashTagActivity : AppCompatActivity() {
     //add hash tags
     private fun addTags() {
         val tagName = binding.etInputTag.text.toString()
-        val tag = HashTags(mButtonId, tagName)
+//        val tag = HashTags(mButtonId, tagName)
+        val creationTimeTag: Long = System.currentTimeMillis()
+        val tag = HashTags(mButtonId, tagName, creationTimeTag)
         val dbRef = mFirestoreDb.collection("hashtags")
 
         dbRef
@@ -144,6 +149,31 @@ class HashTagActivity : AppCompatActivity() {
             .addOnFailureListener {
                 lifecycleScope.launchWhenResumed {
                     Log.e("ErrorTag", "Error adding tag...")
+                }
+            }
+    }
+
+    //update button class after hashtag added
+    private fun updateButton(count: Int) {
+        val buttonRef = mFirestoreDb.collection("buttons")
+        val buttonGroup = ButtonGroup(mButtonId, mButtonName, count)
+        buttonRef
+            .document(mButtonId)
+            .set(buttonGroup, SetOptions.merge())
+            .addOnSuccessListener {
+                lifecycleScope.launchWhenCreated {
+                    Toast.makeText(this@HashTagActivity,
+                        "Button updated successfully",
+                        Toast.LENGTH_SHORT).show()
+                    Log.i("UpdatedButton", "$buttonGroup updated")
+
+                }
+            }
+            .addOnFailureListener {
+                lifecycleScope.launchWhenResumed {
+                    Toast.makeText(this@HashTagActivity,
+                        "Something went wrong. Please try again...",
+                        Toast.LENGTH_SHORT).show()
                 }
             }
     }

@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.kudu.tagboard.R
 import com.kudu.tagboard.adapter.ButtonGroupListViewAdapter
@@ -44,7 +45,8 @@ class GroupsActivity : AppCompatActivity() {
     private fun addButtonListToFirestore(buttonName: String) {
         val dbRef = mFirestoreDb.collection("buttons")
         val buttonId = dbRef.document().id
-        val buttonGroup = ButtonGroup(buttonId, buttonName)
+        val creationTime: Long = System.currentTimeMillis()
+        val buttonGroup = ButtonGroup(buttonId, buttonName, 0, creationTime)
 
 //        dbRef.add(buttonGroup)
         dbRef
@@ -73,6 +75,7 @@ class GroupsActivity : AppCompatActivity() {
     //get list of buttons
     private fun getButtonListFromFirestore() {
         mFirestoreDb.collection("buttons")
+            .orderBy("creationTimeButton", Query.Direction.DESCENDING)
             .get()
             /* .addOnSuccessListener { document ->
                  lifecycleScope.launchWhenCreated {
@@ -102,6 +105,7 @@ class GroupsActivity : AppCompatActivity() {
                             buttonList.add(buttonGroup)
                         }
                         initialiseAdapter()
+                        buttonListAdapter.notifyDataSetChanged()
                     }
                 }
             }

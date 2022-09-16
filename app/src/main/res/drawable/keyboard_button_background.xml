@@ -7,7 +7,8 @@
         android:endColor="@color/logo_color_light"
         android:startColor="@color/logo_color_blue"
         android:type="linear" />-->
-    <solid android:color="@color/logo_color_blue" />
+<!--    <solid android:color="@color/logo_color_blue" />-->
+    <solid android:color="@color/keyboard_button_bg" />
 
     <corners android:radius="10dp" />
 

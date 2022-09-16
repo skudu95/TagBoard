@@ -12,5 +12,8 @@
     <color name="logo_color_blue">#0DBDE2</color>
     <color name="logo_color_light">#DADADA</color>
     <color name="transparent">#00000000</color>
+    <color name="keyboard_background">#343434</color>
+    <color name="keyboard_button_bg">#4e4c66</color>
+    <color name="keyboard_button_bg_2">#0E0E0E</color>
 
 </resources>

@@ -7,4 +7,5 @@ import kotlinx.android.parcel.Parcelize
 data class HashTags(
     var buttonId: String? = null,
     var tagName: String? = null,
+    var creationTimeTag: Long = 0,
 ) : Parcelable

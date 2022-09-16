@@ -17,6 +17,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.kudu.tagboard.R
 import com.kudu.tagboard.activities.GroupsActivity
 import com.kudu.tagboard.adapter.KeyboardViewAdapter
@@ -29,7 +30,8 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
     KeyboardViewAdapter.OnItemClickListener {
 
     private val buttonList: ArrayList<ButtonGroup> = ArrayList()
-//    private var myButtonId: String = HashTagActivity().mButtonId
+    private val mFirestoreDb = FirebaseFirestore.getInstance()
+    val buttonAdapter = KeyboardViewAdapter(this, buttonList, this)
 
 //    val ic = currentInputConnection
 
@@ -44,6 +46,7 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
         //working with the buttons inside
         val ic = currentInputConnection
         val backspace = myView.findViewById<ImageButton>(R.id.btn_backspace)
+        val enter = myView.findViewById<ImageButton>(R.id.btn_enter_next_line)
         val btnSettings = myView.findViewById<ImageButton>(R.id.settings_to_app)
         val btnKeyboardPicker = myView.findViewById<ImageButton>(R.id.keyboard_picker)
         val seekBar = myView.findViewById<SeekBar>(R.id.tag_seekbar)
@@ -63,6 +66,29 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
             override fun onProgressChanged(seekbar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val strProgress = progress.toString()
                 seekBarText.text = "$strProgress Tags"
+
+                mFirestoreDb.collection("buttons")
+                    .whereEqualTo("tagItemsNumber", progress)
+                    .get()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            if (buttonList != null) {
+                                buttonList.clear()
+                            }
+
+                            for (document in task.result) {
+                                val buttonGroup = document.toObject(ButtonGroup::class.java)
+                                buttonGroup.id = document.id
+                                buttonList.add(buttonGroup)
+                            }
+//                            initialiseAdapter()
+                            buttonAdapter.notifyDataSetChanged()
+                        }
+                    }
+                    .addOnFailureListener {
+                        Log.e("ButtonListError", "Error querying button list")
+
+                    }
             }
 
             override fun onStartTrackingTouch(seekbar: SeekBar?) = Unit
@@ -91,24 +117,55 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
             }
         }
 
-        //get the list from firestore
-        val mFirestoreDb = FirebaseFirestore.getInstance()
+        //long press backspace
+        backspace.setOnLongClickListener {
+            val lengthToDelete: Int = checkForLengthToDelete()
+            ic.deleteSurroundingText(lengthToDelete, 0)
+        }
 
+        //enter button
+        enter.setOnClickListener {
+            ic.commitText("\n", 1)
+        }
+
+        //get the list from firestore
+//        val mFirestoreDb = FirebaseFirestore.getInstance()
         mFirestoreDb.collection("buttons")
+            .orderBy("creationTimeButton", Query.Direction.DESCENDING)
             .get()
-            .addOnSuccessListener { document ->
-                Log.e("ButtonList Keyboard", document.documents.toString())
-                for (i in document.documents) {
-                    val buttonGroup = i.toObject(ButtonGroup::class.java)
-                    buttonGroup!!.id = i.id
-                    buttonList.add(buttonGroup)
+            /*  .addOnSuccessListener { document ->
+                  Log.e("ButtonList Keyboard", document.documents.toString())
+                  for (i in document.documents) {
+                      val buttonGroup = i.toObject(ButtonGroup::class.java)
+                      buttonGroup!!.id = i.id
+                      buttonList.add(buttonGroup)
+                  }
+                  val buttonKeyboardRV =
+                      myView.findViewById<RecyclerView>(R.id.buttons_keyboard_rv)
+                  buttonKeyboardRV.setItemViewCacheSize(8)
+                  buttonKeyboardRV.layoutManager = GridLayoutManager(this, 2)
+  //                val buttonAdapter = KeyboardViewAdapter(this, buttonList, this)
+                  buttonKeyboardRV.adapter = buttonAdapter
+                  buttonAdapter.notifyDataSetChanged()
+              }*/
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    if (buttonList != null) {
+                        buttonList.clear()
+                    }
+                    for (document in task.result) {
+                        val buttonGroup = document.toObject(ButtonGroup::class.java)
+                        buttonGroup.id = document.id
+                        buttonList.add(buttonGroup)
+                    }
+                    val buttonKeyboardRV =
+                        myView.findViewById<RecyclerView>(R.id.buttons_keyboard_rv)
+                    buttonKeyboardRV.setItemViewCacheSize(8)
+                    buttonKeyboardRV.layoutManager = GridLayoutManager(this, 2)
+//                    val buttonAdapter = KeyboardViewAdapter(this, buttonList, this)
+                    buttonKeyboardRV.adapter = buttonAdapter
+                    buttonAdapter.notifyDataSetChanged()
                 }
-                val buttonKeyboardRV = myView.findViewById<RecyclerView>(R.id.buttons_keyboard_rv)
-                buttonKeyboardRV.setItemViewCacheSize(8)
-                buttonKeyboardRV.layoutManager = GridLayoutManager(this, 2)
-                val buttonAdapter = KeyboardViewAdapter(this, buttonList, this)
-                buttonKeyboardRV.adapter = buttonAdapter
-                buttonAdapter.notifyDataSetChanged()
             }
             .addOnFailureListener {
                 Log.e("ButtonListErrorKeyboard", "Error querying button list")
@@ -146,6 +203,19 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
                 ic.commitText(code.toString(), 1)
             }
         }
+    }
+
+    private fun checkForLengthToDelete(): Int {
+        val ic = currentInputConnection
+        // Returns the length of characters for deletion, until the previous
+        // hashtag symbol:
+        val text: String = ic.getTextBeforeCursor(100, 0).toString()
+        if (text.isNotEmpty()) {
+            val textLength = text.length
+            val lastOccurrenceOfHashtag = text.lastIndexOf('#')
+            return textLength - lastOccurrenceOfHashtag
+        }
+        return 0
     }
 
     override fun onItemClick(position: Int) {
