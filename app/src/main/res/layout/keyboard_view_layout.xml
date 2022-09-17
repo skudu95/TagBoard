@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="300dp"
     android:layout_alignParentBottom="true"
@@ -23,10 +22,10 @@
             android:layout_weight="5"
             android:background="@color/transparent"
             android:backgroundTint="@color/white"
+            android:max="30"
+            android:min="0"
             android:progressBackgroundTint="@color/white"
             android:progressTint="@color/logo_color_blue"
-            android:min="0"
-            android:max="30"
             android:thumbTint="@color/white" />
 
         <TextView
@@ -64,7 +63,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/linear_settings_buttons"
         android:layout_marginTop="5dp"
-        android:baselineAligned="false"
         android:orientation="horizontal">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -89,22 +87,26 @@
                 android:id="@+id/btn_backspace"
                 android:layout_width="35dp"
                 android:layout_height="30dp"
-                android:background="@drawable/backspace_button_bg"
-                android:contentDescription="@string/backspace"
-                android:src="@drawable/delete_key_icon"
-                app:tint="@color/white"
                 android:layout_marginBottom="3dp"
-                tools:ignore="NestedWeights" />
+                android:background="@drawable/backspace_button_bg"
+                android:clickable="true"
+                android:contentDescription="@string/backspace"
+                android:focusable="true"
+                android:src="@drawable/delete_key_icon"
+                app:tint="@color/white" />
 
             <ImageButton
                 android:id="@+id/btn_enter_next_line"
                 android:layout_width="35dp"
                 android:layout_height="30dp"
+                android:clickable="true"
+                android:longClickable="true"
+                android:layout_below="@id/btn_backspace"
                 android:background="@drawable/enter_button_bg"
                 android:contentDescription="@string/enter"
-                android:layout_below="@id/btn_backspace"
                 android:src="@drawable/enter_key_icon"
-                app:tint="@color/white" />
+                app:tint="@color/white"
+                android:focusable="true" />
         </RelativeLayout>
     </LinearLayout>
 

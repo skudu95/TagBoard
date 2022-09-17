@@ -10,10 +10,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.ImageButton
-import android.widget.RelativeLayout
-import android.widget.SeekBar
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
@@ -44,7 +41,7 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
         keyboardView.setOnKeyboardActionListener(this)
 
         //working with the buttons inside
-        val ic = currentInputConnection
+//        val ic = currentInputConnection
         val backspace = myView.findViewById<ImageButton>(R.id.btn_backspace)
         val enter = myView.findViewById<ImageButton>(R.id.btn_enter_next_line)
         val btnSettings = myView.findViewById<ImageButton>(R.id.settings_to_app)
@@ -101,12 +98,13 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
             val intent = Intent(this, GroupsActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
-
         }
 
         //backspace button
         backspace.setOnClickListener {
-//            Toast.makeText(this, "Backspace clicked", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Backspace clicked", Toast.LENGTH_SHORT).show()
+
+            val ic = currentInputConnection
             val selectedText = ic.getSelectedText(0)
             if (TextUtils.isEmpty(selectedText)) {
                 // no selection, so delete previous character
@@ -119,12 +117,16 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
 
         //long press backspace
         backspace.setOnLongClickListener {
+            val ic = currentInputConnection
+
             val lengthToDelete: Int = checkForLengthToDelete()
             ic.deleteSurroundingText(lengthToDelete, 0)
         }
 
         //enter button
         enter.setOnClickListener {
+            val ic = currentInputConnection
+
             ic.commitText("\n", 1)
         }
 
@@ -133,21 +135,6 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
         mFirestoreDb.collection("buttons")
             .orderBy("creationTimeButton", Query.Direction.DESCENDING)
             .get()
-            /*  .addOnSuccessListener { document ->
-                  Log.e("ButtonList Keyboard", document.documents.toString())
-                  for (i in document.documents) {
-                      val buttonGroup = i.toObject(ButtonGroup::class.java)
-                      buttonGroup!!.id = i.id
-                      buttonList.add(buttonGroup)
-                  }
-                  val buttonKeyboardRV =
-                      myView.findViewById<RecyclerView>(R.id.buttons_keyboard_rv)
-                  buttonKeyboardRV.setItemViewCacheSize(8)
-                  buttonKeyboardRV.layoutManager = GridLayoutManager(this, 2)
-  //                val buttonAdapter = KeyboardViewAdapter(this, buttonList, this)
-                  buttonKeyboardRV.adapter = buttonAdapter
-                  buttonAdapter.notifyDataSetChanged()
-              }*/
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     if (buttonList != null) {
@@ -226,6 +213,7 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
         val mFirestoreDb = FirebaseFirestore.getInstance()
         mFirestoreDb.collection("hashtags")
             .whereEqualTo("buttonId", clickedButtonId)
+            .limit(2) //TODO: make changes here 
             .get()
             .addOnSuccessListener { doc ->
                 var data = ""
@@ -236,7 +224,6 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
                     for (tagList in tagName) {
                         data += " $tagList"
                     }
-
                 }
                 val ic = currentInputConnection
                 ic.commitText(data, 1)
