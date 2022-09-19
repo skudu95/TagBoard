@@ -226,7 +226,7 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
         val mFirestoreDb = FirebaseFirestore.getInstance()
         mFirestoreDb.collection("hashtags")
             .whereEqualTo("buttonId", clickedButtonId)
-            .limit(progressCount.toLong()) //TODO: make changes here
+            .limit(progressCount.toLong())
             .get()
             .addOnSuccessListener { doc ->
                 var data = ""
