@@ -10,7 +10,10 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import android.widget.ImageButton
+import android.widget.RelativeLayout
+import android.widget.SeekBar
+import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
@@ -102,7 +105,7 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
 
         //backspace button
         backspace.setOnClickListener {
-            Toast.makeText(this, "Backspace clicked", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this, "Backspace clicked", Toast.LENGTH_SHORT).show()
 
             val ic = currentInputConnection
             val selectedText = ic.getSelectedText(0)
