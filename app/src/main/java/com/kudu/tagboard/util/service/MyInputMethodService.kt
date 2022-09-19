@@ -32,6 +32,7 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
     private val buttonList: ArrayList<ButtonGroup> = ArrayList()
     private val mFirestoreDb = FirebaseFirestore.getInstance()
     val buttonAdapter = KeyboardViewAdapter(this, buttonList, this)
+    var progressCount = 0
 
 //    val ic = currentInputConnection
 
@@ -65,30 +66,39 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekbar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val strProgress = progress.toString()
-                seekBarText.text = "$strProgress Tags"
 
-                mFirestoreDb.collection("buttons")
-                    .whereEqualTo("tagItemsNumber", progress)
-                    .get()
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            if (buttonList != null) {
-                                buttonList.clear()
-                            }
+                if (fromUser) {
+                    seekBarText.text = "$strProgress Tags"
+                    progressCount = progress
+                }
 
-                            for (document in task.result) {
-                                val buttonGroup = document.toObject(ButtonGroup::class.java)
-                                buttonGroup.id = document.id
-                                buttonList.add(buttonGroup)
-                            }
-//                            initialiseAdapter()
-                            buttonAdapter.notifyDataSetChanged()
-                        }
-                    }
-                    .addOnFailureListener {
-                        Log.e("ButtonListError", "Error querying button list")
+                /*  if (fromUser) {
+                      seekBarText.text = "$strProgress Tags"
+                      mFirestoreDb.collection("buttons")
+  //                    .whereEqualTo("tagItemsNumber", progress)
+                          .limit(progress.toLong())
+                          .get()
+                          .addOnCompleteListener { task ->
+                              if (task.isSuccessful) {
+                                  if (buttonList != null) {
+                                      buttonList.clear()
+                                  }
 
-                    }
+                                  for (document in task.result) {
+                                      val buttonGroup = document.toObject(ButtonGroup::class.java)
+                                      buttonGroup.id = document.id
+                                      buttonList.add(buttonGroup)
+                                  }
+  //                            initialiseAdapter()
+                                  progressCount = progress
+                                  buttonAdapter.notifyDataSetChanged()
+                              }
+                          }
+                          .addOnFailureListener {
+                              Log.e("ButtonListError", "Error querying button list")
+
+                          }
+                  }*/
             }
 
             override fun onStartTrackingTouch(seekbar: SeekBar?) = Unit
@@ -216,7 +226,7 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
         val mFirestoreDb = FirebaseFirestore.getInstance()
         mFirestoreDb.collection("hashtags")
             .whereEqualTo("buttonId", clickedButtonId)
-            .limit(2) //TODO: make changes here 
+            .limit(progressCount.toLong()) //TODO: make changes here
             .get()
             .addOnSuccessListener { doc ->
                 var data = ""
