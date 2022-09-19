@@ -31,7 +31,7 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
 
     private val buttonList: ArrayList<ButtonGroup> = ArrayList()
     private val mFirestoreDb = FirebaseFirestore.getInstance()
-    val buttonAdapter = KeyboardViewAdapter(this, buttonList, this)
+    private val buttonAdapter = KeyboardViewAdapter(this, buttonList, this)
     var progressCount = 0
 
 //    val ic = currentInputConnection
@@ -218,7 +218,7 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
         return 0
     }
 
-    override fun onItemClick(position: Int) {
+   /* override fun onItemClick(position: Int) {
 //        Toast.makeText(this, "item $position", Toast.LENGTH_SHORT).show()
         val clickedItem: ButtonGroup = buttonList[position]
         val clickedButtonId = clickedItem.id
@@ -241,6 +241,39 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
                 val ic = currentInputConnection
                 ic.commitText(data, 1)
                 Log.d("ClickKeyData", data)
+            }
+    }*/
+
+    override fun onItemClick(position: Int) {
+        val clickedItem: ButtonGroup = buttonList[position]
+        val clickedButtonId = clickedItem.id
+
+        mFirestoreDb.collection("hashtags")
+            .whereEqualTo("buttonId", clickedButtonId)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val tagList: MutableList<String> = mutableListOf()
+                    for (i in task.result) {
+                        val tag = i.toObject(HashTags::class.java)
+                        val hashtag = tag.tagName
+                        tagList.add(hashtag.toString())
+                        Log.d("hashtag", hashtag.toString())
+                    }
+
+                    val shuffledTagList =
+                        tagList.asSequence().shuffled().take(progressCount).toMutableList()
+                    val noCommaBracket =
+                        shuffledTagList.toString().replace("[", "").replace("]", "")
+                            .replace(",", "")
+
+                    val tagListSize = tagList.size
+                    Log.d("tagListSize", tagListSize.toString())
+
+                    val ic = currentInputConnection
+                    ic.commitText(noCommaBracket, 1)
+                    Log.d("ClickKeyData", noCommaBracket)
+                }
             }
     }
 
