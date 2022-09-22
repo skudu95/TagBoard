@@ -265,7 +265,7 @@ class MyInputMethodService : InputMethodService(), OnKeyboardActionListener,
                         tagList.asSequence().shuffled().take(progressCount).toMutableList()
                     val noCommaBracket =
                         shuffledTagList.toString().replace("[", "").replace("]", " ")
-                            .replace(",", "")
+//                            .replace(",", "")
 
                     val tagListSize = tagList.size
                     Log.d("tagListSize", tagListSize.toString())
