@@ -25,6 +25,7 @@ class HashTagActivity : AppCompatActivity() {
 
     private var mButtonName: String = ""
     private var mButtonId: String = ""
+    private var mCreationTimeButton : Long = 0
 //    var count = 0
 
     private val mFirestoreDb = FirebaseFirestore.getInstance()
@@ -41,6 +42,9 @@ class HashTagActivity : AppCompatActivity() {
         }
         if (intent.hasExtra("buttonId")) {
             mButtonId = intent.getStringExtra("buttonId")!!
+        }
+        if (intent.hasExtra("creationTimeButton")){
+            mCreationTimeButton = intent.getLongExtra("creationTimeButton", 0)
         }
 
         setUpActionBar()
@@ -156,7 +160,7 @@ class HashTagActivity : AppCompatActivity() {
     //update button class after hashtag added
     private fun updateButton(count: Int) {
         val buttonRef = mFirestoreDb.collection("buttons")
-        val buttonGroup = ButtonGroup(mButtonId, mButtonName, count)
+        val buttonGroup = ButtonGroup(mButtonId, mButtonName, count, mCreationTimeButton)
         buttonRef
             .document(mButtonId)
             .set(buttonGroup, SetOptions.merge())

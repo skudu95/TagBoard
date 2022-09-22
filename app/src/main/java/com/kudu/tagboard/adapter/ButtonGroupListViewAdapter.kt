@@ -52,6 +52,7 @@ class ButtonGroupListViewAdapter(
             val intent = Intent(context, HashTagActivity::class.java)
             intent.putExtra("buttonId", model.id)
             intent.putExtra("buttonName", model.buttonName)
+            intent.putExtra("creationTimeButton", model.creationTimeButton)
             context.startActivity(intent)
         }
     }
